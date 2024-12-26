@@ -42,7 +42,8 @@ end
 ---@return number | 'the job id'
 function M.start_job(cmd, opts)
     opts = opts or {}
-    local id = vim.fn.jobstart(cmd, {
+
+    local job_opts = {
         stdout_buffered = true,
         ---@param data string[]
         on_stdout = function(_, data, _)
@@ -55,7 +56,13 @@ function M.start_job(cmd, opts)
                 opts.on_exit(code)
             end
         end,
-    })
+    }
+
+    if vim.fn.getftype(vim.fn.expand("%:p:h")) == "file" then
+        job_opts.cwd = vim.fn.expand("%:p:h")
+    end
+
+    local id = vim.fn.jobstart(cmd, job_opts)
 
     if opts.input then
         vim.fn.chansend(id, opts.input)

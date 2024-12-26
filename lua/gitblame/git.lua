@@ -36,12 +36,12 @@ local function get_azure_url(url)
     -- HTTPS has a different URL format
     local org, project, repo = string.match(url, "(.*)/(.*)/_git/(.*)")
     if org and project and repo then
-        return 'https://dev.azure.com/' .. org .. "/" .. project .. "/_git/" .. repo
+        return "https://dev.azure.com/" .. org .. "/" .. project .. "/_git/" .. repo
     end
 
     org, project, repo = string.match(url, "(.*)/(.*)/(.*)")
     if org and project and repo then
-        return 'https://dev.azure.com/' .. org .. "/" .. project .. "/_git/" .. repo
+        return "https://dev.azure.com/" .. org .. "/" .. project .. "/_git/" .. repo
     end
 
     return url
@@ -117,7 +117,13 @@ local function get_file_url(remote_url, branch, filepath, line1, line2)
         return repo_url .. file_path
     elseif line2 == nil or line1 == line2 then
         if isAzure then
-            return repo_url .. file_path .. "&line=" .. line1 .. "&lineEnd=" .. line1 + 1 .. "&lineStartColumn=1&lineEndColumn=1"
+            return repo_url
+                .. file_path
+                .. "&line="
+                .. line1
+                .. "&lineEnd="
+                .. line1 + 1
+                .. "&lineStartColumn=1&lineEndColumn=1"
         end
 
         return repo_url .. file_path .. "#L" .. line1
@@ -127,7 +133,13 @@ local function get_file_url(remote_url, branch, filepath, line1, line2)
         end
 
         if isAzure then
-            return repo_url .. file_path .. "&line=" .. line1 .. "&lineEnd=" .. line2 + 1 .. "&lineStartColumn=1&lineEndColumn=1"
+            return repo_url
+                .. file_path
+                .. "&line="
+                .. line1
+                .. "&lineEnd="
+                .. line2 + 1
+                .. "&lineStartColumn=1&lineEndColumn=1"
         end
 
         return repo_url .. file_path .. "#L" .. line1 .. "-L" .. line2
@@ -235,7 +247,7 @@ function M.get_repo_root(callback)
     if not utils.get_filepath() then
         return
     end
-    local command = utils.make_local_command("git rev-parse --show-toplevel")
+    local command = "git rev-parse --show-toplevel"
 
     utils.start_job(command, {
         on_stdout = function(data)
